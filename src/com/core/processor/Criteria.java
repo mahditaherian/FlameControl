@@ -1,7 +1,8 @@
 package com.core.processor;
 
 import com.core.comparator.Comparator;
-import com.core.object.StandardPicture;
+import com.core.object.Flame;
+import com.core.object.StandardImage;
 import com.core.provider.ImageProvider;
 
 /**
@@ -12,10 +13,10 @@ public class Criteria {
     private Comparator comparator;
     private int samplingCount;
     private int samplingDelay;
-    private StandardPicture reference;
+    private Flame reference;
     private ImageProvider provider;
 
-    public Criteria(Comparator comparator, int samplingCount, int samplingDelay, StandardPicture reference, ImageProvider provider) {
+    public Criteria(Comparator comparator, int samplingCount, int samplingDelay, Flame reference, ImageProvider provider) {
         this.comparator = comparator;
         this.samplingCount = samplingCount;
         this.samplingDelay = samplingDelay;
@@ -35,7 +36,7 @@ public class Criteria {
         return samplingDelay;
     }
 
-    public StandardPicture getReference() {
+    public Flame getReference() {
         return reference;
     }
 
