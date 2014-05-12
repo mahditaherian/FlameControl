@@ -5,7 +5,8 @@ import com.core.object.StandardImage;
 import com.core.processor.Criteria;
 import com.core.processor.ImageProcessor;
 import com.core.provider.ImageProvider;
-import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,10 +30,10 @@ public class FlameController {
     public void run() {
         for (int i = 0; i < criteria.getSamplingCount(); i++) {
             try {
-                Image image = provider.next();
+                BufferedImage image = provider.next();//todo not done
                 
                 
-                StandardImage standardImage = ImageProcessor.standardize(image);
+                StandardImage standardImage = ImageProcessor.standardize(image);//done
                 List<Flame> flames = ImageProcessor.getFlames(standardImage);
                 
                 for(Flame flame : flames){

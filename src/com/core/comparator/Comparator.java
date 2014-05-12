@@ -10,6 +10,7 @@ import com.core.object.Flame;
 public class Comparator {
 
     public FlameStateType compare(Flame flame, Flame reference) {
+        
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
