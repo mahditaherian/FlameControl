@@ -7,11 +7,8 @@ import com.core.object.Flame;
  *
  * @author Mahdi
  */
-public class Comparator {
+public abstract class Comparator {
 
-    public FlameStateType compare(Flame flame, Flame reference) {
-        
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public abstract FlameStateType compare(Flame flame, Flame reference);
     
 }

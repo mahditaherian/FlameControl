@@ -1,18 +1,13 @@
 package com.core.provider;
 
-import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
 
 /**
  *
  * @author Mahdi
  */
-public class ImageProvider {
+public abstract class ImageProvider {
 //    BufferedImage image;
-    
-    
-    public BufferedImage next(){
-        throw new UnsupportedOperationException();
-    }
+
+    public abstract BufferedImage next();
 }

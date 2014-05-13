@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 
 /**
  *
- * @author Peyman
+ * @author Mahdi
  */
 public class Flame extends StandardImage {
     private FlameStateType stateType;

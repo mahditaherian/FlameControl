@@ -1,5 +1,6 @@
 package com.core.object;
 
+import com.core.common.Config;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
@@ -10,12 +11,16 @@ import java.awt.image.BufferedImage;
 public class StandardImage {
 
     private BufferedImage image;
-    private int[][] histogram;
+    private Histogram histogram;
+    private int width;
+    private int height;
 
     public StandardImage(BufferedImage img) {
         this.image = img;
         updateHistogram();
-        histogram = new int[3][3];
+        width = img.getWidth();
+        height = img.getHeight();
+        histogram = new Histogram(Config.COLOR_LEVEL_QUANTIZATION);
     }
 
     private void updateHistogram() {
@@ -25,20 +30,18 @@ public class StandardImage {
 //        RandomIter iterator = RandomIterFactory.create(image, null);
         // Get memory for a pixel and for the accumulator.
         double[] pixel = new double[3];
-        clearHistogram();
+        histogram.reset();
         //make histogram
         for (int y = 0; y < imageHeight; y++) {
             for (int x = 0; x < imageWidth; x++) {
 //                iterator.getPixel(x, y, pixel);
                 Color color = new Color(image.getRGB(x, y));
-                histogram[0][color.getRed()]++;
-                histogram[1][color.getGreen()]++;
-                histogram[2][color.getBlue()]++;
+                histogram.addColor(color);
             }
         }
     }
 
-    public int[][] getHistogram() {
+    public Histogram getHistogram() {
         return histogram;
     }
 
@@ -46,12 +49,14 @@ public class StandardImage {
         return image;
     }
 
-    private void clearHistogram() {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                histogram[i][j] = 0;
-            }
-        }
+    public int getWidth() {
+        return width;
     }
+
+    public int getHeight() {
+        return height;
+    }
+    
+    
 
 }
