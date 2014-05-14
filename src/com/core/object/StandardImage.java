@@ -14,33 +14,36 @@ public class StandardImage {
     private Histogram histogram;
     private int width;
     private int height;
+    private Color[][] pixels;
 
     public StandardImage(BufferedImage img) {
         this.image = img;
-        updateHistogram();
+        histogram = new Histogram(Config.COLOR_LEVEL_QUANTIZATION);
         width = img.getWidth();
         height = img.getHeight();
-        histogram = new Histogram(Config.COLOR_LEVEL_QUANTIZATION);
+        pixels = new Color[width][height];
+        updateHistogram();
     }
 
     private void updateHistogram() {
-        int imageHeight = image.getHeight();
-        int imageWidth = image.getWidth();
-
-//        RandomIter iterator = RandomIterFactory.create(image, null);
-        // Get memory for a pixel and for the accumulator.
-        double[] pixel = new double[3];
         histogram.reset();
         //make histogram
-        for (int y = 0; y < imageHeight; y++) {
-            for (int x = 0; x < imageWidth; x++) {
-//                iterator.getPixel(x, y, pixel);
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
                 Color color = new Color(image.getRGB(x, y));
+                pixels[x][y] = color;
                 histogram.addColor(color);
             }
         }
     }
 
+    public Color getPixel(int x, int y) {
+        if (x < 0 || x >= width || y < 0 || y > height) {
+            throw new IllegalArgumentException("The entered pixel is out of image range.");
+        }
+        return pixels[x][y];
+    }
+    
     public Histogram getHistogram() {
         return histogram;
     }
@@ -56,7 +59,5 @@ public class StandardImage {
     public int getHeight() {
         return height;
     }
-    
-    
 
 }

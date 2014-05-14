@@ -15,6 +15,7 @@ public class Histogram {
         reds = new int[level];
         greens = new int[level];
         blues = new int[level];
+        this.level = level;
     }
 
     /**
