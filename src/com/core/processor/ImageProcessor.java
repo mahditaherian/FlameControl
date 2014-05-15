@@ -80,7 +80,7 @@ public class ImageProcessor {
         return flames;
     }
 
-    private static BufferedImage crop(BufferedImage src, Rectangle bound) {
+    public static BufferedImage crop(BufferedImage src, Rectangle bound) {
         BufferedImage dest = src.getSubimage(bound.x, bound.y, bound.width, bound.height);
         return dest;
     }

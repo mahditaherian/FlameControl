@@ -1,6 +1,7 @@
 package com.core.common;
 
 import java.awt.Color;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +10,10 @@ import java.util.List;
  * @author Mahdi
  */
 public final class Config {
+
+    public static final File DEFAULT_IMAGES_PATH = new File("images/");
+    public static final File DEFAULT_REFERENCE = new File(DEFAULT_IMAGES_PATH + "reference/ref.jpg");
+    public static final String[] VALID_IMAGE_EXTENSIONS = new String[]{"jpg","png","bmp"};
 
     public static final int COLOR_LEVEL_QUANTIZATION = 3;
 
@@ -25,8 +30,8 @@ public final class Config {
     public static final List<Color> FLAME_BOUND_COLORS = new ArrayList<>();
 
     static {
-        FLAME_BOUND_COLORS.add(new Color(0,0,2));
-        FLAME_BOUND_COLORS.add(new Color(1,1,2));
-        FLAME_BOUND_COLORS.add(new Color(2,2,2));
+        FLAME_BOUND_COLORS.add(new Color(0, 0, 2));
+        FLAME_BOUND_COLORS.add(new Color(1, 1, 2));
+        FLAME_BOUND_COLORS.add(new Color(2, 2, 2));
     }
 }
