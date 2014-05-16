@@ -12,8 +12,8 @@ import java.util.List;
 public final class Config {
 
     public static final File DEFAULT_IMAGES_PATH = new File("images/");
-    public static final File DEFAULT_REFERENCE = new File(DEFAULT_IMAGES_PATH + "reference/ref.jpg");
-    public static final String[] VALID_IMAGE_EXTENSIONS = new String[]{"jpg","png","bmp"};
+    public static final File DEFAULT_REFERENCE = new File("images/reference/ref.jpg");
+    public static final String[] VALID_IMAGE_EXTENSIONS = new String[]{"jpg", "png", "bmp"};
 
     public static final int COLOR_LEVEL_QUANTIZATION = 3;
 
@@ -26,6 +26,9 @@ public final class Config {
 
     public static final double SAFE_SIZE_SIMILARITY = 0.9d;
     public static final double CAUTION_SIZE_SIMILARITY = 0.8d;
+    
+    public static final double SAFE_AREA_SIMILARITY = 0.8d;
+    public static final double CAUTION_AREA_SIMILARITY = 0.5d;
 
     public static final List<Color> FLAME_BOUND_COLORS = new ArrayList<>();
 

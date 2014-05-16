@@ -4,6 +4,7 @@ import com.core.FlameStateType;
 import com.core.common.Config;
 import com.core.object.Flame;
 import com.core.object.Histogram;
+import java.awt.Color;
 
 /**
  * @author Mahdi
@@ -13,23 +14,27 @@ public class ImageComparator extends Comparator {
     @Override
     public FlameStateType compare(Flame flame, Flame reference) {
         double sizeSimilarity = sizeSimilarityValue(flame, reference);
-        if(sizeSimilarity<Config.CAUTION_SIZE_SIMILARITY){
+        if (sizeSimilarity < Config.CAUTION_SIZE_SIMILARITY) {
             return FlameStateType.DANGER;
         }
-        
-        
+
         double colorSimilarity = colorSimilarityValue(flame, reference);
-        if(colorSimilarity< Config.CAUTION_COLOR_SIMILARITY){
+        if (colorSimilarity < Config.CAUTION_COLOR_SIMILARITY) {
             return FlameStateType.DANGER;
         }
-        
-        if(colorSimilarity> Config.SAFE_COLOR_SIMILARITY && sizeSimilarity> Config.SAFE_SIZE_SIMILARITY){
+
+        double areaSimilarity = areaSimilarityValue(flame, reference);
+        if (areaSimilarity < Config.CAUTION_AREA_SIMILARITY) {
+            return FlameStateType.DANGER;
+        }
+
+        if (colorSimilarity > Config.SAFE_COLOR_SIMILARITY && sizeSimilarity > Config.SAFE_SIZE_SIMILARITY && areaSimilarity > Config.SAFE_AREA_SIMILARITY) {
             return FlameStateType.SAFE;
         }
-        
+
         return FlameStateType.CAUTION;
     }
-    
+
     private double sizeSimilarityValue(Flame flame, Flame reference) {
         double w1 = flame.getWidth();
         double w2 = reference.getWidth();
@@ -42,12 +47,12 @@ public class ImageComparator extends Comparator {
         double val = Math.min(s1, s2) / Math.max(s1, s2);
         return val;
     }
-    
-    private double colorSimilarityValue(Flame flame, Flame reference){
+
+    private double colorSimilarityValue(Flame flame, Flame reference) {
         Histogram src = flame.getHistogram();
         Histogram ref = reference.getHistogram();
-        double refValue = getHistogramValue(ref);
-        double srcValue = getHistogramValue(src);
+        double refValue = getHistogramValue(ref) / reference.getArea();
+        double srcValue = getHistogramValue(src) / flame.getArea();
         double colorSimilarity = Math.min(refValue, srcValue) / Math.max(refValue, srcValue);
         return colorSimilarity;
     }
@@ -61,6 +66,14 @@ public class ImageComparator extends Comparator {
 
         }
         return value;
+    }
+
+    private double areaSimilarityValue(Flame flame, Flame reference) {
+        int getAreaFlame = flame.getArea();
+        double scale = reference.getHeight() / flame.getHeight();
+        int getAreaReference = reference.getArea();
+        double similarity = Math.min(getAreaFlame * scale * scale, getAreaReference) / Math.max(getAreaFlame * scale * scale, getAreaReference);
+        return similarity;
     }
 
 }

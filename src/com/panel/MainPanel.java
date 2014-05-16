@@ -1,7 +1,9 @@
 package com.panel;
 
+import com.core.FlameStateType;
 import com.core.common.Config;
 import com.core.common.Utils;
+import com.core.comparator.ImageComparator;
 import com.core.object.Flame;
 import com.core.object.StandardImage;
 import com.core.processor.ImageProcessor;
@@ -35,7 +37,8 @@ public class MainPanel extends javax.swing.JFrame {
 
     File imagesPath;
     File reference;
-    Map<JLabel,BufferedImage> labelImageMap = new HashMap<>();
+    Map<JLabel, BufferedImage> labelImageMap = new HashMap<>();
+    Map<BufferedImage, Flame> imageFlameMap = new HashMap<>();
 
     /**
      * Creates new form MainPanel
@@ -43,7 +46,7 @@ public class MainPanel extends javax.swing.JFrame {
     public MainPanel() {
         initComponents();
         imagesPath = Config.DEFAULT_IMAGES_PATH;
-
+        reference = Config.DEFAULT_REFERENCE;
         BufferedImage image;
         List<BufferedImage> images = new ArrayList<>();
         for (File file : imagesPath.listFiles(Utils.getImagesFileFilter())) {
@@ -55,6 +58,32 @@ public class MainPanel extends javax.swing.JFrame {
             }
         }
         displayImages(images);
+        try {
+            showReference(ImageIO.read(reference));
+        } catch (IOException ex) {
+            Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    int size = 300;
+
+    private void showReference(BufferedImage image) {
+        StandardImage standardImage = ImageProcessor.standardize(image);
+        List<Flame> flames = ImageProcessor.getFlames(standardImage);
+        Flame flame = flames.get(0);
+        final BufferedImage img = ImageProcessor.crop(image, flame.getBound());
+        labelImageMap.put(refPicLabel, img);
+        imageFlameMap.put(img, flame);
+        final Image scaledInstance = img.getScaledInstance(size, size, 0);
+        refPicLabel.setIcon(new ImageIcon(scaledInstance));
+        refPicLabel.repaint();
+    }
+
+    private void showFlame(BufferedImage image) {
+        final Image scaledInstance = image.getScaledInstance(size, size, 0);
+        labelImageMap.put(srcPicLabel, image);
+        srcPicLabel.setIcon(new ImageIcon(scaledInstance));
+        srcPicLabel.repaint();
     }
 
     private void displayImages(List<BufferedImage> images) {
@@ -65,7 +94,7 @@ public class MainPanel extends javax.swing.JFrame {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                JLabel label = (JLabel)e.getSource();
+                JLabel label = (JLabel) e.getSource();
                 BufferedImage img = labelImageMap.get(label);
                 displayeFlames(img);
             }
@@ -92,6 +121,7 @@ public class MainPanel extends javax.swing.JFrame {
         };
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
+        jPanel3.removeAll();
         int i = 0;
         GroupLayout.ParallelGroup hg = jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING);
         GroupLayout.SequentialGroup sg = jPanel3Layout.createSequentialGroup();
@@ -106,7 +136,7 @@ public class MainPanel extends javax.swing.JFrame {
             sg.addComponent(label, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED);
             label.addMouseListener(selectImageListener);
-            labelImageMap.put(label,image);
+            labelImageMap.put(label, image);
 //            jPanel3.add(label);
 
         }
@@ -122,6 +152,7 @@ public class MainPanel extends javax.swing.JFrame {
     void displayeFlames(BufferedImage img) {
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
+        jPanel5.removeAll();
         GroupLayout.SequentialGroup hsg = jPanel5Layout.createSequentialGroup();
         jPanel5Layout.setHorizontalGroup(
                 jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -136,16 +167,68 @@ public class MainPanel extends javax.swing.JFrame {
 
         StandardImage standardImage = ImageProcessor.standardize(img);
         List<Flame> flames = ImageProcessor.getFlames(standardImage);
+        MouseListener click = new MouseListener() {
 
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                showFlame(labelImageMap.get((JLabel) e.getSource()));
+                compare(labelImageMap.get(srcPicLabel), labelImageMap.get(refPicLabel));
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+
+        };
         for (Flame flame : flames) {
             Rectangle bound = flame.getBound();
             BufferedImage crop = ImageProcessor.crop(img, bound);
             JLabel label = new JLabel(new ImageIcon(crop.getScaledInstance(100, 100, 1)));
+            label.addMouseListener(click);
+            labelImageMap.put(label, crop);
             hsg.addComponent(label, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED);
             vpg.addComponent(label, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE);
+            imageFlameMap.put(crop, flame);
         }
         this.repaint();
+    }
+
+    private void compare(BufferedImage get, BufferedImage get0) {
+        ImageComparator comparator = new ImageComparator();
+
+        final FlameStateType compare = comparator.compare(imageFlameMap.get(get), imageFlameMap.get(get0));
+        switch (compare) {
+            case CAUTION:
+                lblState.setText("احتیاط");
+                statePanel.setBackground(Color.YELLOW);
+                break;
+            case SAFE:
+                lblState.setText("امن");
+                statePanel.setBackground(Color.GREEN);
+                break;
+            case DANGER:
+                lblState.setText("خطرناک");
+                statePanel.setBackground(Color.RED);
+                break;
+
+        }
     }
 
     /**
@@ -172,7 +255,7 @@ public class MainPanel extends javax.swing.JFrame {
         jPanel5 = new javax.swing.JPanel();
         refPicPanel = new javax.swing.JPanel();
         refPicLabel = new javax.swing.JLabel();
-        jPanel6 = new javax.swing.JPanel();
+        statePanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         lblSimilary = new javax.swing.JLabel();
         lblColor = new javax.swing.JLabel();
@@ -324,7 +407,7 @@ public class MainPanel extends javax.swing.JFrame {
             .addComponent(refPicLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE)
         );
 
-        jPanel6.setBackground(new java.awt.Color(0, 204, 0));
+        statePanel.setBackground(new java.awt.Color(0, 204, 0));
 
         jLabel1.setFont(new java.awt.Font("B Nazanin", 0, 18)); // NOI18N
         jLabel1.setText("شباهت:");
@@ -349,11 +432,11 @@ public class MainPanel extends javax.swing.JFrame {
         lblState.setFont(new java.awt.Font("B Nazanin", 0, 18)); // NOI18N
         lblState.setText("طبیعی");
 
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+        javax.swing.GroupLayout statePanelLayout = new javax.swing.GroupLayout(statePanel);
+        statePanel.setLayout(statePanelLayout);
+        statePanelLayout.setHorizontalGroup(
+            statePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statePanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lblState)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -368,11 +451,11 @@ public class MainPanel extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(45, 45, 45))
         );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
+        statePanelLayout.setVerticalGroup(
+            statePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(statePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(statePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(lblSimilary)
                     .addComponent(jLabel4)
@@ -429,7 +512,7 @@ public class MainPanel extends javax.swing.JFrame {
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jPanel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(statePanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(refPicPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -452,7 +535,7 @@ public class MainPanel extends javax.swing.JFrame {
                             .addComponent(refPicPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(srcPicPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(statePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
@@ -515,7 +598,6 @@ public class MainPanel extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JLabel lblColor;
@@ -526,5 +608,6 @@ public class MainPanel extends javax.swing.JFrame {
     private javax.swing.JScrollPane resultsPane;
     private javax.swing.JLabel srcPicLabel;
     private javax.swing.JPanel srcPicPanel;
+    private javax.swing.JPanel statePanel;
     // End of variables declaration//GEN-END:variables
 }
