@@ -1,5 +1,6 @@
 package com.core;
 
+import com.core.comparator.TestResult;
 import com.core.object.Flame;
 import com.core.object.StandardImage;
 import com.core.processor.Criteria;
@@ -30,8 +31,8 @@ public class FlameController {
                 List<Flame> flames = ImageProcessor.getFlames(standardImage);//todo should implements
 
                 for (Flame flame : flames) {
-                    FlameStateType stateType = criteria.getComparator().compare(flame, criteria.getReference());
-                    flame.setStateType(stateType);
+                    TestResult result = criteria.getComparator().compare(flame, criteria.getReference());
+                    flame.setStateType(result.getFlameState());
                 }
                 
                 

@@ -1,6 +1,5 @@
 package com.core.comparator;
 
-import com.core.FlameStateType;
 import com.core.object.Flame;
 
 /**
@@ -9,6 +8,6 @@ import com.core.object.Flame;
  */
 public abstract class Comparator {
 
-    public abstract FlameStateType compare(Flame flame, Flame reference);
+    public abstract TestResult compare(Flame flame, Flame reference);
     
 }

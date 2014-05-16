@@ -4,19 +4,17 @@ import com.core.FlameStateType;
 import com.core.common.Config;
 import com.core.common.Utils;
 import com.core.comparator.ImageComparator;
+import com.core.comparator.TestResult;
 import com.core.object.Flame;
 import com.core.object.StandardImage;
 import com.core.processor.ImageProcessor;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.LayoutManager;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,6 +43,8 @@ public class MainPanel extends javax.swing.JFrame {
      */
     public MainPanel() {
         initComponents();
+        lblColor.setVisible(false);
+        jLabel4.setVisible(false);
         imagesPath = Config.DEFAULT_IMAGES_PATH;
         reference = Config.DEFAULT_REFERENCE;
         BufferedImage image;
@@ -52,6 +52,7 @@ public class MainPanel extends javax.swing.JFrame {
         for (File file : imagesPath.listFiles(Utils.getImagesFileFilter())) {
             try {
                 image = ImageIO.read(file);
+                image = ImageProcessor.resizeImage(image);
                 images.add(image);
             } catch (IOException ex) {
                 Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -59,13 +60,15 @@ public class MainPanel extends javax.swing.JFrame {
         }
         displayImages(images);
         try {
-            showReference(ImageIO.read(reference));
+            BufferedImage ref = ImageIO.read(reference);
+            ref = ImageProcessor.resizeImage(ref);
+            showReference(ref);
         } catch (IOException ex) {
             Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    int size = 300;
+    int size = 100;
 
     private void showReference(BufferedImage image) {
         StandardImage standardImage = ImageProcessor.standardize(image);
@@ -213,8 +216,13 @@ public class MainPanel extends javax.swing.JFrame {
     private void compare(BufferedImage get, BufferedImage get0) {
         ImageComparator comparator = new ImageComparator();
 
-        final FlameStateType compare = comparator.compare(imageFlameMap.get(get), imageFlameMap.get(get0));
-        switch (compare) {
+        final TestResult result = comparator.compare(imageFlameMap.get(get), imageFlameMap.get(get0));
+        double similarity = result.getSimilarity();
+        similarity = Math.round(similarity * 100) / 100d;
+        lblSimilary.setText(similarity + " درصد ");
+//        lblColor.setBackground(result.getOverallColor());
+
+        switch (result.getFlameState()) {
             case CAUTION:
                 lblState.setText("احتیاط");
                 statePanel.setBackground(Color.YELLOW);
@@ -265,10 +273,6 @@ public class MainPanel extends javax.swing.JFrame {
         jPanel7 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         resultsPane = new javax.swing.JScrollPane();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
-        jMenu3 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(204, 204, 204));
@@ -297,7 +301,7 @@ public class MainPanel extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel8.setText("تصاویر                             x ");
+        jLabel8.setText("تصاویر");
         jLabel8.setOpaque(true);
 
         imagesPane.setBackground(new java.awt.Color(153, 153, 153));
@@ -306,11 +310,11 @@ public class MainPanel extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 130, Short.MAX_VALUE)
+            .addGap(0, 160, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 547, Short.MAX_VALUE)
+            .addGap(0, 548, Short.MAX_VALUE)
         );
 
         imagesPane.setViewportView(jPanel3);
@@ -320,14 +324,16 @@ public class MainPanel extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(imagesPane)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(imagesPane, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(imagesPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addComponent(imagesPane, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE))
         );
 
         srcPicPanel.setBackground(new java.awt.Color(255, 255, 255));
@@ -365,11 +371,11 @@ public class MainPanel extends javax.swing.JFrame {
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 542, Short.MAX_VALUE)
+            .addGap(0, 507, Short.MAX_VALUE)
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 143, Short.MAX_VALUE)
+            .addGap(0, 150, Short.MAX_VALUE)
         );
 
         curTestPane.setViewportView(jPanel5);
@@ -390,8 +396,9 @@ public class MainPanel extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, 0)
-                .addComponent(curTestPane))
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(curTestPane, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
         );
 
         refPicPanel.setBackground(new java.awt.Color(255, 255, 255));
@@ -404,17 +411,17 @@ public class MainPanel extends javax.swing.JFrame {
         );
         refPicPanelLayout.setVerticalGroup(
             refPicPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(refPicLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE)
+            .addComponent(refPicLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        statePanel.setBackground(new java.awt.Color(0, 204, 0));
+        statePanel.setBackground(new java.awt.Color(153, 153, 153));
 
         jLabel1.setFont(new java.awt.Font("B Nazanin", 0, 18)); // NOI18N
         jLabel1.setText("شباهت:");
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
         lblSimilary.setFont(new java.awt.Font("B Nazanin", 0, 18)); // NOI18N
-        lblSimilary.setText("80 درصد");
+        lblSimilary.setText("نا مشخص");
 
         lblColor.setBackground(new java.awt.Color(51, 153, 255));
         lblColor.setFont(new java.awt.Font("B Nazanin", 0, 18)); // NOI18N
@@ -430,7 +437,7 @@ public class MainPanel extends javax.swing.JFrame {
         jLabel5.setText("وضعیت :");
 
         lblState.setFont(new java.awt.Font("B Nazanin", 0, 18)); // NOI18N
-        lblState.setText("طبیعی");
+        lblState.setText("نامشخص");
 
         javax.swing.GroupLayout statePanelLayout = new javax.swing.GroupLayout(statePanel);
         statePanel.setLayout(statePanelLayout);
@@ -471,7 +478,7 @@ public class MainPanel extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel7.setText("نتایج                             x ");
+        jLabel7.setText("نتایج ");
         jLabel7.setOpaque(true);
 
         resultsPane.setBackground(new java.awt.Color(153, 153, 153));
@@ -481,7 +488,9 @@ public class MainPanel extends javax.swing.JFrame {
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(resultsPane, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(resultsPane, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -490,17 +499,6 @@ public class MainPanel extends javax.swing.JFrame {
                 .addGap(0, 0, 0)
                 .addComponent(resultsPane))
         );
-
-        jMenu1.setText("File");
-        jMenuBar1.add(jMenu1);
-
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
-
-        jMenu3.setText("jMenu3");
-        jMenuBar1.add(jMenu3);
-
-        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -589,10 +587,6 @@ public class MainPanel extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

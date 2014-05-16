@@ -14,14 +14,14 @@ public class StandardImage {
     private Histogram histogram;
     private int width;
     private int height;
-    private Color[][] pixels;
+    private Pixel[][] pixels;
 
     public StandardImage(BufferedImage img) {
         this.image = img;
         histogram = new Histogram(Config.COLOR_LEVEL_QUANTIZATION);
         width = img.getWidth();
         height = img.getHeight();
-        pixels = new Color[width][height];
+        pixels = new Pixel[width][height];
         updateHistogram();
     }
 
@@ -30,14 +30,14 @@ public class StandardImage {
         //make histogram
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                Color color = new Color(image.getRGB(x, y));
+                Pixel color = new Pixel(image.getRGB(x, y));
                 pixels[x][y] = color;
                 histogram.addColor(color);
             }
         }
     }
 
-    public Color getPixel(int x, int y) {
+    public Pixel getPixel(int x, int y) {
         if (x < 0 || x >= width || y < 0 || y > height) {
             throw new IllegalArgumentException("The entered pixel is out of image range.");
         }

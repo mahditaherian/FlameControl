@@ -34,7 +34,7 @@ public class TestPanel extends javax.swing.JFrame {
         initComponents();
 
         try {
-            File file = new File("images/flames.png");
+            File file = new File("images/DSC00073.jpg");
             BufferedImage read = ImageIO.read(file);
             StandardImage standardImage = ImageProcessor.standardize(read);
             List<Flame> flames = ImageProcessor.getFlames(standardImage);

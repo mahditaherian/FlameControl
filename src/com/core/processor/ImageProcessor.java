@@ -2,14 +2,22 @@ package com.core.processor;
 
 import com.core.common.Config;
 import com.core.object.Flame;
+import com.core.object.Pixel;
 import com.core.object.StandardImage;
 import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -21,14 +29,28 @@ public class ImageProcessor {
         BufferedImage image = deepCopy(src);
         //todo: resize, blur, quantize
 //        StandardImage standardImage = new StandardImage(image);
-        blurImage(image);
-        quantizeImage(image);
 
+//        image = resizeImage(image);
+        blurImage(image);
+        File path = new File("out/blur.bmp");
+        try {
+            ImageIO.write(image, "bmp", path);
+        } catch (IOException ex) {
+            Logger.getLogger(ImageProcessor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        quantizeImage(image);
+        path = new File("out/quantized.bmp");
+        try {
+            final BufferedImage deepCopy = deepCopy(image);
+            ImageIO.write(image, "bmp", path);
+        } catch (IOException ex) {
+            Logger.getLogger(ImageProcessor.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return new StandardImage(image);
     }
 
     private static BufferedImage blurImage(BufferedImage img) {
-        GaussianFilter gaussianFilter = new GaussianFilter();
+        GaussianFilter gaussianFilter = new GaussianFilter(Config.DEFINE_AS_NOISE_SIZE);
         gaussianFilter.filter(img, img);
         return img;
     }
@@ -39,11 +61,11 @@ public class ImageProcessor {
         Rectangle bound;
         boolean flameStarted;
         boolean flameEnded = false;
-        int bx = 0, by = image.getHeight(), y1 = 0, y2 = 0, w = 0, h = 0;
+        int bx = 0, by = image.getHeight(), y1 = 0, y2 = 0, w = 1, h = 1;
         for (int x = 0; x < image.getWidth(); x++) {
             flameStarted = false;
             for (int y = 0; y < image.getHeight(); y++) {
-                Color pixel = image.getPixel(x, y);
+                Pixel pixel = image.getPixel(x, y);
                 if (Config.FLAME_BOUND_COLORS.contains(pixel)) {
                     if (!flameStarted) {
                         flameStarted = true;
@@ -57,16 +79,20 @@ public class ImageProcessor {
 
             if (!flameStarted) {
                 if (flameEnded) {
-                    bound = new Rectangle(bx, by, w, h);
-                    BufferedImage bounded = crop(image.getImage(), bound);
-                    flame = new Flame(bounded,bound);
-                    flames.add(flame);
+                    if (h < Config.DEFINE_AS_NOISE_SIZE || w < Config.DEFINE_AS_NOISE_SIZE) {
+                        //this is noise.....
+                    } else {
+                        bound = new Rectangle(bx, by, w, h);
+                        BufferedImage bounded = crop(image.getImage(), bound);
+                        flame = new Flame(bounded, bound);
+                        flames.add(flame);
+                    }
                     bx = 0;
                     by = image.getHeight();
                     y1 = 0;
                     y2 = 0;
-                    w = 0;
-                    h = 0;
+                    w = 1;
+                    h = 1;
                 }
                 bx = x;
                 flameEnded = false;
@@ -106,6 +132,29 @@ public class ImageProcessor {
         boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
         WritableRaster raster = bi.copyData(null);
         return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+    }
+
+    public static BufferedImage resizeImage(BufferedImage image) {
+        image = toBufferedImage(image.getScaledInstance((int) (image.getWidth() * Config.SCALE_IMAGE),
+                (int) (image.getHeight() * Config.SCALE_IMAGE), Image.SCALE_SMOOTH));
+        return image;
+    }
+
+    public static BufferedImage toBufferedImage(Image img) {
+        if (img instanceof BufferedImage) {
+            return (BufferedImage) img;
+        }
+
+        // Create a buffered image with transparency
+        BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+        // Draw the image on to the buffered image
+        Graphics2D bGr = bimage.createGraphics();
+        bGr.drawImage(img, 0, 0, null);
+        bGr.dispose();
+
+        // Return the buffered image
+        return bimage;
     }
 
 }
