@@ -24,23 +24,19 @@ public class FlameController {
 
     public void run() {
         for (int i = 0; i < criteria.getSamplingCount(); i++) {
-            try {
-                BufferedImage image = criteria.getProvider().next();
-
-                StandardImage standardImage = ImageProcessor.standardize(image);
-                List<Flame> flames = ImageProcessor.getFlames(standardImage);//todo should implements
-
-                for (Flame flame : flames) {
-                    TestResult result = criteria.getComparator().compare(flame, criteria.getReference());
-                    flame.setStateType(result.getFlameState());
-                }
-                
-                
-                Thread.sleep(criteria.getSamplingDelay() * 1000);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(FlameController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            BufferedImage image = criteria.getProvider().next();
+            List<Flame> flames = getFlames(image);
         }
+    }
+
+    public List<Flame> getFlames(BufferedImage image) {
+        StandardImage standardImage = ImageProcessor.standardize(image);
+        List<Flame> flames = ImageProcessor.getFlames(standardImage);
+        for (Flame flame : flames) {
+            TestResult result = criteria.getComparator().compare(flame, criteria.getReference());
+            flame.setTestResult(result);
+        }
+        return flames;
     }
 
 }

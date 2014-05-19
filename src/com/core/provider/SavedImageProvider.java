@@ -3,6 +3,7 @@ package com.core.provider;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,11 +19,13 @@ public class SavedImageProvider extends ImageProvider {
     private int lastIndex = -1;
 
     public SavedImageProvider(File pathToImages) {
-        if (pathToImages == null || pathToImages.exists() || !pathToImages.isDirectory()) {
+        if (pathToImages == null || !pathToImages.exists() || !pathToImages.isDirectory()) {
             throw new IllegalArgumentException("The path you entered is not a valid directory!");
         }
 
         this.path = pathToImages;
+        images = new ArrayList<>();
+        updatePathImages();
 
     }
 

@@ -1,7 +1,6 @@
 package com.core.common;
 
 import com.core.object.Pixel;
-import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
