@@ -12,6 +12,7 @@ import com.core.object.Flame;
 import com.core.object.StandardImage;
 import com.core.processor.Criteria;
 import com.core.processor.ImageProcessor;
+import com.core.provider.CameraImageProvider;
 import com.core.provider.SavedImageProvider;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -22,6 +23,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JSlider;
 
 /**
  *
@@ -50,10 +52,9 @@ public class FlameTestPanel extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        criteria = new Criteria(new ImageComparator(), 1, 0, reference, new SavedImageProvider(Config.DEFAULT_IMAGES_PATH));
+        criteria = new Criteria(new ImageComparator(), 1, 0, reference, new CameraImageProvider());
         flameController = new FlameController(criteria);
     }
-
 
     private void showReference(BufferedImage image) {
 
@@ -84,6 +85,7 @@ public class FlameTestPanel extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jSlider1 = new javax.swing.JSlider();
         jSlider2 = new javax.swing.JSlider();
+        jButton2 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jPanel4 = new javax.swing.JPanel();
 
@@ -97,7 +99,7 @@ public class FlameTestPanel extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(refPicLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
+                .addComponent(refPicLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
         jPanel2Layout.setVerticalGroup(
@@ -120,8 +122,25 @@ public class FlameTestPanel extends javax.swing.JFrame {
         jLabel3.setText("حساسیت رنگ :");
 
         jSlider1.setValue(80);
+        jSlider1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSlider1StateChanged(evt);
+            }
+        });
 
         jSlider2.setValue(70);
+        jSlider2.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSlider2StateChanged(evt);
+            }
+        });
+
+        jButton2.setText("بروز رسانی");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -130,14 +149,20 @@ public class FlameTestPanel extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jButton2)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)))
-                    .addComponent(jSlider2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addContainerGap())
+                            .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)))
+                            .addComponent(jSlider2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addContainerGap())))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -150,7 +175,9 @@ public class FlameTestPanel extends javax.swing.JFrame {
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton2)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -173,8 +200,7 @@ public class FlameTestPanel extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
-                .addContainerGap())
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -209,8 +235,15 @@ public class FlameTestPanel extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private BufferedImage next;
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        BufferedImage next = criteria.getProvider().next();
+        next = criteria.getProvider().next();
+        next = ImageProcessor.resizeImage(next);
+        processImage();
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+    private void processImage() {
         List<Flame> flames = flameController.getFlames(next);
 
 //        flameViewerPanel1.showFlame(flames.get(0));
@@ -221,31 +254,60 @@ public class FlameTestPanel extends javax.swing.JFrame {
         jPanel4.setLayout(jPanel4Layout);
         GroupLayout.SequentialGroup hsg = jPanel4Layout.createSequentialGroup();
         GroupLayout.ParallelGroup vpg = jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING);
+        jPanel4.removeAll();
         for (Flame flame : flames) {
             FlameViewerPanel panel = new FlameViewerPanel();
-            panel.showFlame(flame);
+
+            panel.showFlame(flame, next);
             panel.repaint();
             hsg.addComponent(panel, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addGap(0, 0, Short.MAX_VALUE);
             vpg.addComponent(panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE);
         }
-        
+
         jPanel4Layout.setVerticalGroup(
                 jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel4Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(vpg
-//                                .addComponent(flameViewerPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-//                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        )));
-                jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(hsg)
+                        //                                .addComponent(flameViewerPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        //                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        )));
+        jPanel4Layout.setHorizontalGroup(
+                jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(hsg)
         );
         this.repaint();
+    }
+    private void jSlider2StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider2StateChanged
+        JSlider source = (JSlider) evt.getSource();
+//        if (source.getValueIsAdjusting()) {
+        double fps = (double)source.getValue() / 100.0d;
+        Config.SAFE_SIZE_SIMILARITY = fps;
+        Config.CAUTION_SIZE_SIMILARITY = fps * 0.7;
+        System.out.println(fps);
+//            processImage();
+//        }
+    }//GEN-LAST:event_jSlider2StateChanged
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void jSlider1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider1StateChanged
+        JSlider source = (JSlider) evt.getSource();
+//        if (source.getValueIsAdjusting()) {
+        double fps = (double)source.getValue() / 100.0d;
+        Config.SAFE_COLOR_SIMILARITY = fps;
+        Config.CAUTION_COLOR_SIMILARITY = fps * 0.7;
+        System.out.println(fps);
+//            processImage();
+//        }
+    }//GEN-LAST:event_jSlider1StateChanged
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+//        System.out.println(jSlider1.getValue());
+//        System.out.println(jSlider2.getValue());
+        System.out.println("");
+        processImage();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -284,6 +346,7 @@ public class FlameTestPanel extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;

@@ -25,14 +25,18 @@ public class ImageGrabber {
     public ImageGrabber() {
         canvas.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
     }
+    
+    public static void main(String[] args) {
+        takePicture();
+    }
 
-    public void takePicture() {
+    public static void takePicture() {
         try {
-            FrameGrabber grabber = new VideoInputFrameGrabber(0);
+            FrameGrabber grabber = new VideoInputFrameGrabber(1);
             int i = 0;
             grabber.start();
             IplImage img;
-//            while (true) {
+            while (true) {
             img = grabber.grab();
             if (img != null) {
                 cvSaveImage(Config.DEFAULT_IMAGES_PATH.getAbsolutePath() + "\\flame.jpg", img);
@@ -40,9 +44,11 @@ public class ImageGrabber {
 
                 canvas.showImage(img);
             }
-//                Thread.sleep(time);
-//            }
+                Thread.sleep(3000);
+            }
         } catch (FrameGrabber.Exception ex) {
+            Logger.getLogger(ImageGrabber.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
             Logger.getLogger(ImageGrabber.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

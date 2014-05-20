@@ -30,7 +30,7 @@ public class ImageComparator extends Comparator {
         } else //        if (areaSimilarity < Config.CAUTION_AREA_SIMILARITY) {
         //            return FlameStateType.DANGER;
         //        }
-        if (colorSimilarity > Config.SAFE_COLOR_SIMILARITY && sizeSimilarity > Config.SAFE_SIZE_SIMILARITY && areaSimilarity > Config.SAFE_AREA_SIMILARITY) {
+        if (colorSimilarity >= Config.SAFE_COLOR_SIMILARITY && sizeSimilarity >= Config.SAFE_SIZE_SIMILARITY && areaSimilarity >= Config.SAFE_AREA_SIMILARITY) {
             result.setFlameState(FlameStateType.SAFE);
         } else {
             result.setFlameState(FlameStateType.CAUTION);

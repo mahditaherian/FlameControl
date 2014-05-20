@@ -7,8 +7,10 @@ package com.panel;
 
 import com.core.comparator.TestResult;
 import com.core.object.Flame;
+import com.core.processor.ImageProcessor;
 import java.awt.Color;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 
 /**
@@ -24,10 +26,9 @@ public class FlameViewerPanel extends javax.swing.JPanel {
         initComponents();
     }
 
-
-    
-    public void showFlame(Flame flame) {
-        Image image = flame.getImage().getScaledInstance(100, 200, 1);
+    public void showFlame(Flame flame, BufferedImage originalImage) {
+        BufferedImage crop = ImageProcessor.crop(originalImage, flame.getBound());
+        Image image = crop.getScaledInstance(100, 200, 1);
         flamePicLabel.setIcon(new ImageIcon(image));
         String state;
         TestResult result = flame.getResult();
@@ -50,7 +51,10 @@ public class FlameViewerPanel extends javax.swing.JPanel {
                 break;
 
         }
-        flameSimilarityLabel.setText(String.valueOf(result.getSimilarity()));
+        double similarity = result.getSimilarity();
+        similarity = Math.round(similarity * 1000)/10d;
+        flameSimilarityLabel.setText(similarity + " درصد ");
+//        flameSimilarityLabel.setText(String.valueOf( ((int)Math.round(result.getSimilarity() * 100)) / 100));
         flameStateLabel.setText(state);
     }
 
@@ -114,7 +118,6 @@ public class FlameViewerPanel extends javax.swing.JPanel {
                 .addGap(14, 14, 14))
         );
 
-        flamePicLabel.setText("jLabel1");
         flamePicLabel.setOpaque(true);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
