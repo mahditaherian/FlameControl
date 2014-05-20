@@ -63,7 +63,7 @@ public class CameraImageProvider extends ImageProvider {
         } finally {
             try {
                 if (grabber != null) {
-//                    grabber.flush();
+                    grabber.flush();
                     grabber.stop();
                 }
             } catch (FrameGrabber.Exception ex) {
