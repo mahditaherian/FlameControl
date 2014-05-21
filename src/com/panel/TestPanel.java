@@ -5,6 +5,7 @@
  */
 package com.panel;
 
+import com.core.common.Config;
 import com.core.object.Flame;
 import com.core.object.StandardImage;
 import com.core.processor.ImageProcessor;
@@ -34,7 +35,7 @@ public class TestPanel extends javax.swing.JFrame {
         initComponents();
 
         try {
-            File file = new File("images/DSC00073.jpg");
+            File file = Config.DEFAULT_REFERENCE;
             BufferedImage read = ImageIO.read(file);
             read = ImageProcessor.resizeImage(read);
             StandardImage standardImage = ImageProcessor.standardize(read);

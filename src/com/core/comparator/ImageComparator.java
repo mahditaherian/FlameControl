@@ -71,8 +71,8 @@ public class ImageComparator extends Comparator {
     private double colorSimilarityValue(Flame flame, Flame reference) {
         Histogram src = flame.getHistogram();
         Histogram ref = reference.getHistogram();
-        double refValue = getHistogramValue(ref) / reference.getArea();
-        double srcValue = getHistogramValue(src) / flame.getArea();
+        double refValue = getHistogramValue(ref);// / reference.getArea();
+        double srcValue = getHistogramValue(src);// / flame.getArea();
         double colorSimilarity = Math.min(refValue, srcValue) / Math.max(refValue, srcValue);
         return colorSimilarity;
     }

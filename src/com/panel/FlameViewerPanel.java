@@ -28,7 +28,7 @@ public class FlameViewerPanel extends javax.swing.JPanel {
 
     public void showFlame(Flame flame, BufferedImage originalImage) {
         BufferedImage crop = ImageProcessor.crop(originalImage, flame.getBound());
-        Image image = crop.getScaledInstance(100, 200, 1);
+        Image image = crop.getScaledInstance(flame.getWidth(), flame.getHeight(), Image.SCALE_SMOOTH);
         flamePicLabel.setIcon(new ImageIcon(image));
         String state;
         TestResult result = flame.getResult();

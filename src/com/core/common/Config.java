@@ -12,7 +12,7 @@ import java.util.List;
 public final class Config {
 
     public static final File DEFAULT_IMAGES_PATH = new File("images/");
-    public static final File DEFAULT_REFERENCE = new File("images/reference/ref.jpg");
+    public static final File DEFAULT_REFERENCE = new File("images/reference/ref1.jpg");
     public static final String[] VALID_IMAGE_EXTENSIONS = new String[]{"jpg", "png", "bmp"};
 
     public static final int COLOR_LEVEL_QUANTIZATION = 3;
