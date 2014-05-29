@@ -235,27 +235,27 @@ public class FlameTestPanel extends javax.swing.JFrame {
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 528, Short.MAX_VALUE)
+            .addGap(0, 730, Short.MAX_VALUE)
         );
 
         jScrollPane2.setViewportView(jPanel4);
 
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(new File("C:\\Users\\Mahdi\\Documents\\NetBeansProjects\\FlameControl\\template\\header.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        Image dimg = img.getScaledInstance(950,202,
-            Image.SCALE_SMOOTH);
-        jLabel2.setIcon(new javax.swing.ImageIcon("C:\\Users\\Mahdi\\Documents\\NetBeansProjects\\FlameControl\\template\\header.png")); // NOI18N
+        //BufferedImage img = null;
+        //try {
+            //    img = ImageIO.read(new File("C:\\Users\\Mahdi\\Documents\\NetBeansProjects\\FlameControl\\template\\header.png"));
+            //} catch (IOException e) {
+            //    e.printStackTrace();
+            //}
+        //
+        //Image dimg = img.getScaledInstance(950,202,
+            //            Image.SCALE_SMOOTH);
+        jLabel2.setIcon(new javax.swing.ImageIcon("template\\header.png"));
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 950, Short.MAX_VALUE)
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -272,7 +272,7 @@ public class FlameTestPanel extends javax.swing.JFrame {
                 .addComponent(jScrollPane2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

@@ -37,7 +37,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
           </Group>
-          <Component id="jPanel5" alignment="0" max="32767" attributes="0"/>
+          <Component id="jPanel5" alignment="1" min="-2" max="-2" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -256,7 +256,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="528" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="730" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -268,7 +268,7 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="jLabel2" alignment="0" max="32767" attributes="0"/>
+              <Component id="jLabel2" alignment="0" pref="950" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -283,12 +283,12 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="2" name="C:\Users\Mahdi\Documents\NetBeansProjects\FlameControl\template\header.png"/>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new javax.swing.ImageIcon(&quot;template\\header.png&quot;)" type="code"/>
             </Property>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="BufferedImage img = null;&#xa;try {&#xa;    img = ImageIO.read(new File(&quot;C:\\Users\\Mahdi\\Documents\\NetBeansProjects\\FlameControl\\template\\header.png&quot;));&#xa;} catch (IOException e) {&#xa;    e.printStackTrace();&#xa;}&#xa;&#xa;Image dimg = img.getScaledInstance(950,202,&#xa;            Image.SCALE_SMOOTH);"/>
+            <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="//BufferedImage img = null;&#xa;//try {&#xa;//    img = ImageIO.read(new File(&quot;C:\\Users\\Mahdi\\Documents\\NetBeansProjects\\FlameControl\\template\\header.png&quot;));&#xa;//} catch (IOException e) {&#xa;//    e.printStackTrace();&#xa;//}&#xa;//&#xa;//Image dimg = img.getScaledInstance(950,202,&#xa;//            Image.SCALE_SMOOTH);"/>
           </AuxValues>
         </Component>
       </SubComponents>
