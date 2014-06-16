@@ -25,7 +25,7 @@ public final class Config {
     public static final double GREEN_COLOR_COEFFICIENT = 10d;
     public static final double BLUE_COLOR_COEFFICIENT = 0.1d;
     
-    public static final int CAMERA_IN_USE = 1;
+    public static final int CAMERA_IN_USE = 0;
 
     public static double SAFE_COLOR_SIMILARITY = 0.75d;
     public static double CAUTION_COLOR_SIMILARITY = 0.5d;
